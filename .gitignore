@@ -3,4 +3,7 @@ dist/
 out/test-*.png
 *.png
 !out/vibe-coding.mp4
+!out/vibe-coding-tiktok.mp4
+!out/vibe-coding-instagram.mp4
+!out/vibe-coding-x.mp4
 public/audio/*.mp3

@@ -1,13 +1,13 @@
 import React from "react";
 import {
   useCurrentFrame,
-  useVideoConfig,
   interpolate,
   spring,
   Easing,
 } from "remotion";
 import { SECTION_COLORS } from "./constants";
 import type { SectionData } from "./constants";
+import { useScale } from "./useScale";
 
 const BulletItem: React.FC<{
   text: string;
@@ -15,7 +15,11 @@ const BulletItem: React.FC<{
   accentColor: string;
   fps: number;
   frame: number;
-}> = ({ text, index, accentColor, fps, frame }) => {
+  fontSize: number;
+  dotSize: number;
+  gap: number;
+  marginBottom: number;
+}> = ({ text, index, accentColor, fps, frame, fontSize, dotSize, gap, marginBottom }) => {
   const delay = 50 + index * 12;
 
   const slideIn = spring({
@@ -32,7 +36,6 @@ const BulletItem: React.FC<{
 
   const translateX = interpolate(slideIn, [0, 1], [-60, 0]);
 
-  // Dot pulse
   const dotScale = spring({
     frame,
     fps,
@@ -46,17 +49,16 @@ const BulletItem: React.FC<{
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        gap: 20,
+        gap,
         opacity,
         transform: `translateX(${translateX}px)`,
-        marginBottom: 18,
+        marginBottom,
       }}
     >
-      {/* Bullet dot */}
       <div
         style={{
-          width: 14,
-          height: 14,
+          width: dotSize,
+          height: dotSize,
           borderRadius: "50%",
           backgroundColor: accentColor,
           flexShrink: 0,
@@ -64,10 +66,9 @@ const BulletItem: React.FC<{
           boxShadow: `0 0 12px ${accentColor}60`,
         }}
       />
-      {/* Text */}
       <div
         style={{
-          fontSize: 40,
+          fontSize,
           color: "#e0e0f0",
           fontFamily: "sans-serif",
           lineHeight: 1.5,
@@ -82,10 +83,9 @@ const BulletItem: React.FC<{
 
 export const SectionScene: React.FC<{ data: SectionData }> = ({ data }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { f, sp, cx, cy, fps, width, height } = useScale();
   const colors = SECTION_COLORS[data.number - 1];
 
-  // Section number animation
   const numberScale = spring({
     frame,
     fps,
@@ -98,7 +98,6 @@ export const SectionScene: React.FC<{ data: SectionData }> = ({ data }) => {
     extrapolateRight: "clamp",
   });
 
-  // Title animations
   const titleY = interpolate(frame, [10, 35], [50, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
@@ -110,38 +109,28 @@ export const SectionScene: React.FC<{ data: SectionData }> = ({ data }) => {
     extrapolateRight: "clamp",
   });
 
-  // Subtitle
   const subtitleOpacity = interpolate(frame, [25, 40], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
-  const subtitleY = interpolate(frame, [25, 40], [20, 0], {
+  const lineWidth = interpolate(frame, [20, 50], [0, sp(200)], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.out(Easing.quad),
   });
 
-  // Decorative line
-  const lineWidth = interpolate(frame, [20, 50], [0, 200], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-    easing: Easing.out(Easing.quad),
-  });
-
-  // Floating accent orb
   const orbY = Math.sin(frame * 0.04) * 30;
   const orbX = Math.cos(frame * 0.03) * 20;
 
-  // Background grid dots
+  // Background grid — responsive positions
   const gridDots = Array.from({ length: 15 }, (_, i) => {
     const row = Math.floor(i / 5);
     const col = i % 5;
-    const dotOpacity =
-      0.04 + Math.sin(frame * 0.03 + i * 0.5) * 0.03;
+    const dotOpacity = 0.04 + Math.sin(frame * 0.03 + i * 0.5) * 0.03;
     return {
-      x: 150 + col * 200,
-      y: 300 + row * 500,
+      x: width * 0.14 + col * (width * 0.18),
+      y: height * 0.16 + row * (height * 0.26),
       opacity: dotOpacity,
     };
   });
@@ -157,7 +146,7 @@ export const SectionScene: React.FC<{ data: SectionData }> = ({ data }) => {
         justifyContent: "flex-start",
         alignItems: "center",
         direction: "rtl",
-        padding: "80px 60px",
+        padding: `${sp(80)}px ${sp(60)}px`,
         position: "relative",
         overflow: "hidden",
       }}
@@ -184,9 +173,9 @@ export const SectionScene: React.FC<{ data: SectionData }> = ({ data }) => {
         style={{
           position: "absolute",
           left: -60,
-          top: 200,
-          width: 250,
-          height: 250,
+          top: sp(200),
+          width: sp(250),
+          height: sp(250),
           borderRadius: "50%",
           background: `radial-gradient(circle, ${colors.glow}, transparent 70%)`,
           transform: `translate(${orbX}px, ${orbY}px)`,
@@ -197,9 +186,9 @@ export const SectionScene: React.FC<{ data: SectionData }> = ({ data }) => {
       <div
         style={{
           position: "absolute",
-          right: 60,
-          top: 80,
-          fontSize: 300,
+          right: sp(60),
+          top: sp(80),
+          fontSize: f(300),
           fontWeight: 900,
           color: colors.accent,
           opacity: numberOpacity,
@@ -216,22 +205,22 @@ export const SectionScene: React.FC<{ data: SectionData }> = ({ data }) => {
         style={{
           display: "flex",
           alignItems: "center",
-          gap: 16,
-          marginBottom: 30,
-          marginTop: 100,
+          gap: sp(16),
+          marginBottom: sp(30),
+          marginTop: sp(100),
           opacity: titleOpacity,
         }}
       >
         <div
           style={{
-            width: 50,
-            height: 50,
-            borderRadius: 14,
+            width: f(50),
+            height: f(50),
+            borderRadius: f(14),
             background: `linear-gradient(135deg, ${colors.accent}, ${colors.accent}aa)`,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            fontSize: 26,
+            fontSize: f(26),
             fontWeight: 800,
             color: "#fff",
             fontFamily: "sans-serif",
@@ -242,7 +231,7 @@ export const SectionScene: React.FC<{ data: SectionData }> = ({ data }) => {
         </div>
         <div
           style={{
-            fontSize: 30,
+            fontSize: f(30),
             color: colors.accent,
             fontFamily: "sans-serif",
             fontWeight: 600,
@@ -255,14 +244,14 @@ export const SectionScene: React.FC<{ data: SectionData }> = ({ data }) => {
       {/* Title */}
       <div
         style={{
-          fontSize: 64,
+          fontSize: f(64),
           fontWeight: 900,
           color: "#ffffff",
           fontFamily: "sans-serif",
           textAlign: "center",
           transform: `translateY(${titleY}px)`,
           opacity: titleOpacity,
-          marginBottom: 10,
+          marginBottom: sp(10),
           lineHeight: 1.4,
           textShadow: `0 0 30px ${colors.glow}`,
         }}
@@ -276,17 +265,16 @@ export const SectionScene: React.FC<{ data: SectionData }> = ({ data }) => {
           width: lineWidth,
           height: 3,
           background: `linear-gradient(90deg, transparent, ${colors.accent}, transparent)`,
-          marginBottom: 50,
+          marginBottom: sp(50),
           borderRadius: 2,
         }}
       />
 
-      {/* Subtitle description */}
+      {/* Subtitle spacer */}
       <div
         style={{
           opacity: subtitleOpacity,
-          transform: `translateY(${subtitleY}px)`,
-          marginBottom: 40,
+          marginBottom: sp(40),
         }}
       />
 
@@ -294,8 +282,8 @@ export const SectionScene: React.FC<{ data: SectionData }> = ({ data }) => {
       <div
         style={{
           width: "100%",
-          maxWidth: 850,
-          paddingRight: 20,
+          maxWidth: Math.min(width * 0.85, 850),
+          paddingRight: sp(20),
         }}
       >
         {data.bullets.map((bullet, i) => (
@@ -306,6 +294,10 @@ export const SectionScene: React.FC<{ data: SectionData }> = ({ data }) => {
             accentColor={colors.accent}
             fps={fps}
             frame={frame}
+            fontSize={f(40)}
+            dotSize={f(14)}
+            gap={sp(20)}
+            marginBottom={sp(18)}
           />
         ))}
       </div>
