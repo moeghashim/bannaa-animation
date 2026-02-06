@@ -30,7 +30,7 @@ const BulletItem: React.FC<{
     extrapolateRight: "clamp",
   });
 
-  const translateX = interpolate(slideIn, [0, 1], [60, 0]);
+  const translateX = interpolate(slideIn, [0, 1], [-60, 0]);
 
   // Dot pulse
   const dotScale = spring({
@@ -44,7 +44,7 @@ const BulletItem: React.FC<{
     <div
       style={{
         display: "flex",
-        flexDirection: "row-reverse",
+        flexDirection: "row",
         alignItems: "center",
         gap: 20,
         opacity,
@@ -183,7 +183,7 @@ export const SectionScene: React.FC<{ data: SectionData }> = ({ data }) => {
       <div
         style={{
           position: "absolute",
-          right: -60,
+          left: -60,
           top: 200,
           width: 250,
           height: 250,
@@ -197,7 +197,7 @@ export const SectionScene: React.FC<{ data: SectionData }> = ({ data }) => {
       <div
         style={{
           position: "absolute",
-          left: 60,
+          right: 60,
           top: 80,
           fontSize: 300,
           fontWeight: 900,
