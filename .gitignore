@@ -1,5 +1,5 @@
 node_modules/
 dist/
-out/
-*.mp4
+out/test-*.png
 *.png
+!out/vibe-coding.mp4
