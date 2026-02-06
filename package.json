@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "npx remotion studio",
-    "build": "npx remotion render VibeCodingVideo out/video.mp4",
-    "render": "npx remotion render VibeCodingVideo out/video.mp4"
+    "generate-audio": "node generate-audio.js",
+    "build": "npx remotion render VibeCodingVideo out/vibe-coding.mp4",
+    "render": "npx remotion render VibeCodingVideo out/vibe-coding.mp4",
+    "full": "node generate-audio.js && npx remotion render VibeCodingVideo out/vibe-coding.mp4"
   },
   "repository": {
     "type": "git",
@@ -18,8 +20,10 @@
   "dependencies": {
     "@remotion/cli": "^4.0.419",
     "@remotion/google-fonts": "^4.0.419",
+    "@remotion/media": "4.0.419",
     "@remotion/transitions": "^4.0.419",
     "@types/react": "^19.2.13",
+    "openai": "^6.18.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "remotion": "^4.0.419"

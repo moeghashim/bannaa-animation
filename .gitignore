@@ -3,3 +3,4 @@ dist/
 out/test-*.png
 *.png
 !out/vibe-coding.mp4
+public/audio/*.mp3
