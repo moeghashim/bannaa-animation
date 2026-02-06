@@ -1,0 +1,31 @@
+{
+  "name": "bannaa-animation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx remotion studio",
+    "build": "npx remotion render VibeCodingVideo out/video.mp4",
+    "render": "npx remotion render VibeCodingVideo out/video.mp4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://local_proxy@127.0.0.1:44300/git/moeghashim/bannaa-animation"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@remotion/cli": "^4.0.419",
+    "@remotion/google-fonts": "^4.0.419",
+    "@remotion/transitions": "^4.0.419",
+    "@types/react": "^19.2.13",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "remotion": "^4.0.419"
+  },
+  "devDependencies": {
+    "@types/react-dom": "^19.2.3",
+    "typescript": "^5.9.3"
+  }
+}
