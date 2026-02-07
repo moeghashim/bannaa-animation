@@ -83,7 +83,7 @@ const BulletItem: React.FC<{
 
 export const SectionScene: React.FC<{ data: SectionData }> = ({ data }) => {
   const frame = useCurrentFrame();
-  const { f, sp, cx, cy, fps, width, height } = useScale();
+  const { f, sp, cx, cy, fps, width, height, isPortrait } = useScale();
   const colors = SECTION_COLORS[data.number - 1];
 
   const numberScale = spring({
@@ -143,10 +143,10 @@ export const SectionScene: React.FC<{ data: SectionData }> = ({ data }) => {
         background: `linear-gradient(170deg, ${colors.bg}, #0a0a1a 60%, #08081a)`,
         display: "flex",
         flexDirection: "column",
-        justifyContent: "flex-start",
+        justifyContent: isPortrait ? "flex-start" : "center",
         alignItems: "center",
         direction: "rtl",
-        padding: `${sp(80)}px ${sp(60)}px`,
+        padding: isPortrait ? `${sp(80)}px ${sp(60)}px` : `30px 60px`,
         position: "relative",
         overflow: "hidden",
       }}
@@ -206,8 +206,8 @@ export const SectionScene: React.FC<{ data: SectionData }> = ({ data }) => {
           display: "flex",
           alignItems: "center",
           gap: sp(16),
-          marginBottom: sp(30),
-          marginTop: sp(100),
+          marginBottom: isPortrait ? sp(30) : 12,
+          marginTop: isPortrait ? sp(100) : 0,
           opacity: titleOpacity,
         }}
       >
@@ -265,16 +265,8 @@ export const SectionScene: React.FC<{ data: SectionData }> = ({ data }) => {
           width: lineWidth,
           height: 3,
           background: `linear-gradient(90deg, transparent, ${colors.accent}, transparent)`,
-          marginBottom: sp(50),
+          marginBottom: isPortrait ? sp(50) : 16,
           borderRadius: 2,
-        }}
-      />
-
-      {/* Subtitle spacer */}
-      <div
-        style={{
-          opacity: subtitleOpacity,
-          marginBottom: sp(40),
         }}
       />
 
@@ -282,7 +274,7 @@ export const SectionScene: React.FC<{ data: SectionData }> = ({ data }) => {
       <div
         style={{
           width: "100%",
-          maxWidth: Math.min(width * 0.85, 850),
+          maxWidth: isPortrait ? Math.min(width * 0.85, 850) : Math.min(width * 0.7, 1200),
           paddingRight: sp(20),
         }}
       >
